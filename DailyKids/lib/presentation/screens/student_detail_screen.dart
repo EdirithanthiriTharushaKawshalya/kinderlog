@@ -350,7 +350,61 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                 label: const Text('SMS', style: TextStyle(fontSize: 12)),
               ),
             ],
-          )
+          ),
+          // ── Additional Guardians ──
+          if (_currentStudent.guardians.isNotEmpty) ...[
+            const Divider(height: 28),
+            Row(
+              children: [
+                const Icon(Icons.people_rounded, color: AppTheme.excusedIndigo, size: 16),
+                const SizedBox(width: 6),
+                Text(
+                  'Additional Guardians (${_currentStudent.guardians.length})',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.grey[700]),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            ..._currentStudent.guardians.map((g) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppTheme.bgGrey,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 16,
+                      backgroundColor: AppTheme.excusedIndigo.withOpacity(0.1),
+                      child: Text(
+                        g.name.isNotEmpty ? g.name[0].toUpperCase() : 'G',
+                        style: const TextStyle(color: AppTheme.excusedIndigo, fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(g.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                          Text(g.email, style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+                          if (g.relationship != 'Parent' || g.phone.isNotEmpty)
+                            Text(
+                              [if (g.relationship != 'Parent') g.relationship, if (g.phone.isNotEmpty) g.phone].join(' · '),
+                              style: TextStyle(fontSize: 10, color: Colors.grey[500]),
+                            ),
+                        ],
+                      ),
+                    ),
+                    if (g.email.isNotEmpty)
+                      Icon(Icons.login_rounded, size: 16, color: Colors.grey[400], semanticLabel: 'Can log in as parent'),
+                  ],
+                ),
+              ),
+            )),
+          ],
         ],
       ),
     );

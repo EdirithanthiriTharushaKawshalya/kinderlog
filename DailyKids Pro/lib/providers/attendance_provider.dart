@@ -86,7 +86,17 @@ class AttendanceProvider extends ChangeNotifier {
   }
 
   Future<List<AttendanceRecord>> _loadAllAttendanceRecords() async {
-    return await _activeRepository.getAllRecords();
+    // Load records for the last 12 months
+    final records = <AttendanceRecord>[];
+    final now = DateTime.now();
+    for (int i = 0; i < 366; i++) {
+      final date = DateFormat('yyyy-MM-dd').format(now.subtract(Duration(days: i)));
+      try {
+        final dayRecords = await _activeRepository.getAttendanceForDate(date);
+        records.addAll(dayRecords);
+      } catch (_) {}
+    }
+    return records;
   }
 
   // ---- Branch-scoped students ----
@@ -200,13 +210,6 @@ class AttendanceProvider extends ChangeNotifier {
         _selectedClassFilter = 'All';
       }
     }
-    notifyListeners();
-  }
-
-  /// Management: filter dashboard/roster to a specific branch or show all.
-  void setBranchFilter(String? branchId) {
-    _activeBranchId = branchId ?? '';
-    _selectedClassFilter = 'All';
     notifyListeners();
   }
 

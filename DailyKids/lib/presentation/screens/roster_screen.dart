@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:kinderlog_core/kinderlog_core.dart';
 import '../../providers/attendance_provider.dart';
 import 'student_detail_screen.dart';
@@ -23,6 +24,7 @@ class _RosterScreenState extends State<RosterScreen> {
 
   void _showAddStudentDialog(BuildContext context) {
     final attendance = context.read<AttendanceProvider>();
+    final auth = context.read<AuthProvider>();
     final formKey = GlobalKey<FormState>();
     String name = '';
     String parentName = '';
@@ -33,6 +35,7 @@ class _RosterScreenState extends State<RosterScreen> {
         : 'FS1';
     String allergies = '';
     String notes = '';
+    final guardians = <Map<String, String>>[]; // {name, email, phone, relationship}
 
     final classOptions = attendance.availableClassrooms.where((c) => c != 'All').toList();
     if (classOptions.isEmpty) classOptions.add('FS1');
@@ -127,6 +130,108 @@ class _RosterScreenState extends State<RosterScreen> {
                           maxLines: 2,
                           onSaved: (v) => notes = v ?? '',
                         ),
+                        // ── Guardians Section ──
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            const Icon(Icons.people_rounded, color: AppTheme.primaryTeal, size: 18),
+                            const SizedBox(width: 6),
+                            const Expanded(
+                              child: Text(
+                                'Additional Guardians (can log in)',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                              ),
+                            ),
+                            TextButton.icon(
+                              onPressed: () {
+                                setDialogState(() {
+                                  guardians.add({'name': '', 'email': '', 'phone': '', 'relationship': 'Parent'});
+                                });
+                              },
+                              icon: const Icon(Icons.add, size: 16),
+                              label: const Text('Add', style: TextStyle(fontSize: 12)),
+                            ),
+                          ],
+                        ),
+                        ...guardians.asMap().entries.map((entry) {
+                          final i = entry.key;
+                          final g = entry.value;
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: const Color(0xFFE5E7EB)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          initialValue: g['name'],
+                                          decoration: const InputDecoration(
+                                            labelText: 'Guardian Name *',
+                                            isDense: true,
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                                          ),
+                                          onChanged: (v) => guardians[i]['name'] = v,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      IconButton(
+                                        icon: const Icon(Icons.close, size: 18, color: AppTheme.secondaryCoral),
+                                        onPressed: () => setDialogState(() => guardians.removeAt(i)),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 6),
+                                  TextFormField(
+                                    initialValue: g['email'],
+                                    decoration: const InputDecoration(
+                                      labelText: 'Email (for login) *',
+                                      isDense: true,
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                                    ),
+                                    keyboardType: TextInputType.emailAddress,
+                                    onChanged: (v) => guardians[i]['email'] = v,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          initialValue: g['phone'],
+                                          decoration: const InputDecoration(
+                                            labelText: 'Phone',
+                                            isDense: true,
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                                          ),
+                                          keyboardType: TextInputType.phone,
+                                          onChanged: (v) => guardians[i]['phone'] = v,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      SizedBox(
+                                        width: 110,
+                                        child: TextFormField(
+                                          initialValue: g['relationship'],
+                                          decoration: const InputDecoration(
+                                            labelText: 'Relation',
+                                            isDense: true,
+                                            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                                          ),
+                                          onChanged: (v) => guardians[i]['relationship'] = v,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
                       ],
                     ),
                   ),
@@ -142,6 +247,19 @@ class _RosterScreenState extends State<RosterScreen> {
                   onPressed: () async {
                     if (formKey.currentState?.validate() ?? false) {
                       formKey.currentState?.save();
+
+                      // Build guardian list from form data
+                      final guardianList = guardians
+                          .where((g) => g['name']!.trim().isNotEmpty && g['email']!.trim().isNotEmpty)
+                          .map((g) => Guardian(
+                                id: 'guardian_${const Uuid().v4().substring(0, 6)}',
+                                name: g['name']!.trim(),
+                                email: g['email']!.trim(),
+                                phone: g['phone']?.trim() ?? '',
+                                relationship: g['relationship']?.trim() ?? 'Parent',
+                              ))
+                          .toList();
+
                       await attendance.addNewStudent(
                         name: name,
                         parentName: parentName,
@@ -150,6 +268,7 @@ class _RosterScreenState extends State<RosterScreen> {
                         classroom: classroom,
                         allergies: allergies,
                         notes: notes,
+                        guardians: guardianList,
                       );
                       if (mounted) {
                         Navigator.pop(ctx);

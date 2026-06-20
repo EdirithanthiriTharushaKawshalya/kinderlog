@@ -27,6 +27,7 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoggedIn => _currentUser != null;
   bool get isManagement => _currentUser?.role == UserRole.management;
   bool get isTeacher => _currentUser?.role == UserRole.teacher;
+  bool get isParent => _currentUser?.role == UserRole.parent;
   bool get isFirstLaunch => _preschool == null;
 
   /// Current user's branch (for teachers) or null (for management).
@@ -144,6 +145,31 @@ class AuthProvider extends ChangeNotifier {
         preschoolId: pid,
         branchId: 'branch_02',
         pinnedClassId: 'class_05',
+      ),
+      // -- Parent / Guardian users (can log into DailyKids Pro) --
+      AppUser(
+        id: 'user_parent_1',
+        email: 'john.smith@email.com',
+        name: 'John Smith',
+        role: UserRole.parent,
+        preschoolId: pid,
+        studentIds: ['std_1'],
+      ),
+      AppUser(
+        id: 'user_parent_2',
+        email: 'sarah.johnson@email.com',
+        name: 'Sarah Johnson',
+        role: UserRole.parent,
+        preschoolId: pid,
+        studentIds: ['std_2'],
+      ),
+      AppUser(
+        id: 'user_parent_3',
+        email: 'maria.garcia@email.com',
+        name: 'Maria Garcia',
+        role: UserRole.parent,
+        preschoolId: pid,
+        studentIds: ['std_3'],
       ),
     ];
   }
@@ -352,6 +378,88 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  // ---- Parent Login ----
+  Future<bool> loginAsParent(String email) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      await Future.delayed(const Duration(milliseconds: 400));
+      final user = _users.firstWhere(
+        (u) => u.email.toLowerCase() == email.toLowerCase() && u.role == UserRole.parent,
+      );
+      _currentUser = user;
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (_) {
+      _errorMessage = 'No parent account found with email: $email.\nPlease ask management to add you as a guardian.';
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // ---- Guardian / Parent Account Management ----
+  /// Creates (or reuses) an AppUser for a guardian so they can log in as a parent.
+  /// Returns the AppUser id.
+  Future<String> ensureGuardianUser({
+    required String email,
+    required String name,
+    required String studentId,
+  }) async {
+    if (_preschool == null) return '';
+
+    // Check if user already exists
+    final existing = _users.firstWhere(
+      (u) => u.email.toLowerCase() == email.toLowerCase() && u.role == UserRole.parent,
+      orElse: () => AppUser(
+        id: '',
+        email: '',
+        name: '',
+        role: UserRole.parent,
+        preschoolId: '',
+      ),
+    );
+
+    if (existing.id.isNotEmpty) {
+      // Add student to existing parent's list if not already there
+      if (!existing.studentIds.contains(studentId)) {
+        final idx = _users.indexWhere((u) => u.id == existing.id);
+        if (idx != -1) {
+          _users[idx] = existing.copyWith(
+            studentIds: [...existing.studentIds, studentId],
+          );
+          notifyListeners();
+        }
+      }
+      return existing.id;
+    }
+
+    // Create new parent user
+    await Future.delayed(const Duration(milliseconds: 200));
+    final userId = 'user_parent_${const Uuid().v4().substring(0, 6)}';
+    final user = AppUser(
+      id: userId,
+      email: email,
+      name: name,
+      role: UserRole.parent,
+      preschoolId: _preschool!.id,
+      studentIds: [studentId],
+    );
+    _users.add(user);
+    notifyListeners();
+    return userId;
+  }
+
+  /// Get parent users linked to a specific student.
+  List<AppUser> guardiansForStudent(String studentId) {
+    return _users
+        .where((u) => u.role == UserRole.parent && u.studentIds.contains(studentId))
+        .toList();
   }
 
   // ---- Pin / Unpin Class ----

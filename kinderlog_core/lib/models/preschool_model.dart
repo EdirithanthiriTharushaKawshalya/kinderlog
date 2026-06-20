@@ -142,8 +142,58 @@ class ClassModel {
   }
 }
 
-/// Represents a user of the app (management or teacher).
-enum UserRole { management, teacher }
+/// Represents a user of the app (management, teacher, or parent).
+enum UserRole { management, teacher, parent }
+
+/// Represents a guardian/parent linked to a child.
+class Guardian {
+  final String id;
+  final String name;
+  final String email;
+  final String phone;
+  final String relationship; // e.g. 'Mother', 'Father', 'Grandmother'
+
+  Guardian({
+    required this.id,
+    required this.name,
+    required this.email,
+    this.phone = '',
+    this.relationship = 'Parent',
+  });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'relationship': relationship,
+      };
+
+  factory Guardian.fromJson(Map<String, dynamic> json, String docId) {
+    return Guardian(
+      id: docId,
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      phone: json['phone'] ?? '',
+      relationship: json['relationship'] ?? 'Parent',
+    );
+  }
+
+  Guardian copyWith({
+    String? name,
+    String? email,
+    String? phone,
+    String? relationship,
+  }) {
+    return Guardian(
+      id: id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      relationship: relationship ?? this.relationship,
+    );
+  }
+}
 
 class AppUser {
   final String id;
@@ -153,6 +203,7 @@ class AppUser {
   final String preschoolId;
   final String? branchId; // teacher belongs to one branch
   final String? pinnedClassId; // pinned class for quick access
+  final List<String> studentIds; // parent: linked child IDs
   final DateTime createdAt;
 
   AppUser({
@@ -163,6 +214,7 @@ class AppUser {
     required this.preschoolId,
     this.branchId,
     this.pinnedClassId,
+    this.studentIds = const [],
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime.now();
 
@@ -174,6 +226,7 @@ class AppUser {
         'preschoolId': preschoolId,
         'branchId': branchId,
         'pinnedClassId': pinnedClassId,
+        'studentIds': studentIds,
         'createdAt': createdAt.toIso8601String(),
       };
 
@@ -186,6 +239,10 @@ class AppUser {
       preschoolId: json['preschoolId'] ?? '',
       branchId: json['branchId'],
       pinnedClassId: json['pinnedClassId'],
+      studentIds: (json['studentIds'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'])
           : DateTime.now(),
@@ -204,6 +261,7 @@ class AppUser {
     String? name,
     String? branchId,
     String? pinnedClassId,
+    List<String>? studentIds,
   }) {
     return AppUser(
       id: id,
@@ -213,6 +271,7 @@ class AppUser {
       preschoolId: preschoolId,
       branchId: branchId ?? this.branchId,
       pinnedClassId: pinnedClassId ?? this.pinnedClassId,
+      studentIds: studentIds ?? this.studentIds,
       createdAt: createdAt,
     );
   }
