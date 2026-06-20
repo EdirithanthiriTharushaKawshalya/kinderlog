@@ -1,4 +1,4 @@
-# preschool_attendance_app
+# DailyKids
 
 A new Flutter project.
 

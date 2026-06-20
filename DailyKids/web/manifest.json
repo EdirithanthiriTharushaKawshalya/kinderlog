@@ -1,6 +1,6 @@
 {
-    "name": "preschool_attendance_app",
-    "short_name": "preschool_attendance_app",
+    "name": "DailyKids",
+    "short_name": "DailyKids",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
