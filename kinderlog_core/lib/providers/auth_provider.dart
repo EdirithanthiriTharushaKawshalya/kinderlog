@@ -83,8 +83,8 @@ class AuthProvider extends ChangeNotifier {
     const pid = 'preschool_01';
     _preschool = Preschool(
       id: pid,
-      name: 'KinderLog Preschool',
-      ownerEmail: 'admin@kinderlog.com',
+      name: 'DailyKids Preschool',
+      ownerEmail: 'admin@dailykids.com',
     );
 
     final branch1 = Branch(
@@ -113,14 +113,14 @@ class AuthProvider extends ChangeNotifier {
     _users = [
       AppUser(
         id: 'user_mgmt_01',
-        email: 'admin@kinderlog.com',
+        email: 'admin@dailykids.com',
         name: 'Ms. Priya (Admin)',
         role: UserRole.management,
         preschoolId: pid,
       ),
       AppUser(
         id: 'user_teacher_1',
-        email: 'nimali@kinderlog.com',
+        email: 'nimali@dailykids.com',
         name: 'Ms. Nimali',
         role: UserRole.teacher,
         preschoolId: pid,
@@ -129,7 +129,7 @@ class AuthProvider extends ChangeNotifier {
       ),
       AppUser(
         id: 'user_teacher_2',
-        email: 'sunil@kinderlog.com',
+        email: 'sunil@dailykids.com',
         name: 'Mr. Sunil',
         role: UserRole.teacher,
         preschoolId: pid,
@@ -138,7 +138,7 @@ class AuthProvider extends ChangeNotifier {
       ),
       AppUser(
         id: 'user_teacher_3',
-        email: 'kumari@kinderlog.com',
+        email: 'kumari@dailykids.com',
         name: 'Ms. Kumari',
         role: UserRole.teacher,
         preschoolId: pid,

@@ -266,8 +266,14 @@ class MockAttendanceRepository implements AttendanceRepository {
 
   @override
   Future<List<AttendanceRecord>> getAttendanceForDate(String date) async {
-    await Future.delayed(const Duration(milliseconds: 300));
+    await Future.delayed(const Duration(milliseconds: 50));
     return _records.where((rec) => rec.date == date).toList();
+  }
+
+  @override
+  Future<List<AttendanceRecord>> getAllRecords() async {
+    await Future.delayed(const Duration(milliseconds: 50));
+    return List.from(_records);
   }
 
   @override

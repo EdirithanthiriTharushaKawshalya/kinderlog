@@ -6,6 +6,7 @@ abstract class AttendanceRepository {
   Future<void> addStudent(Student student);
   Future<void> updateStudent(Student student);
   Future<List<AttendanceRecord>> getAttendanceForDate(String date);
+  Future<List<AttendanceRecord>> getAllRecords();
   Future<void> saveAttendanceRecord(AttendanceRecord record);
   Future<void> deleteAttendanceRecord(String recordId);
 }

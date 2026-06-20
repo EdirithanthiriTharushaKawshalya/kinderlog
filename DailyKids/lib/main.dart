@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<AttendanceProvider>(create: (_) => AttendanceProvider()),
       ],
       child: MaterialApp(
-        title: 'KinderLog Attendance',
+        title: 'DailyKids Attendance',
         theme: AppTheme.lightTheme,
         debugShowCheckedModeBanner: false,
         home: const SplashScreen(),

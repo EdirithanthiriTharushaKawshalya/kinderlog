@@ -1,4 +1,4 @@
-package com.example.preschool_attendance_app
+package com.example.daily_kids
 
 import io.flutter.embedding.android.FlutterActivity
 

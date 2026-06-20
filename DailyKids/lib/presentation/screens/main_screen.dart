@@ -5,7 +5,8 @@ import '../../providers/attendance_provider.dart';
 import 'dashboard_screen.dart';
 import 'attendance_marking_screen.dart';
 import 'roster_screen.dart';
-import 'teacher_login_screen.dart';
+import 'management_screen.dart';
+import 'login_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -17,16 +18,9 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
-  late final List<Widget> _screens;
-
   @override
   void initState() {
     super.initState();
-    _screens = const [
-      DashboardScreen(),
-      AttendanceMarkingScreen(),
-      RosterScreen(),
-    ];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final auth = context.read<AuthProvider>();
@@ -35,67 +29,54 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  // ── Role-specific screen lists ──────────────────────────
+  static const _teacherScreens = [
+    DashboardScreen(),
+    AttendanceMarkingScreen(),
+    RosterScreen(),
+  ];
+
+  static const _managementScreens = [
+    DashboardScreen(),
+    ManagementScreen(),
+    RosterScreen(),
+  ];
+
+  List<Widget> _getScreens(AuthProvider auth) {
+    return auth.isManagement ? _managementScreens : _teacherScreens;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<AuthProvider, AttendanceProvider>(
       builder: (context, auth, attendance, _) {
+        final screens = _getScreens(auth);
+        final isManagement = auth.isManagement;
+
         return Scaffold(
           appBar: AppBar(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  attendance.isSubstituteMode
-                      ? 'Sub: ${attendance.substituteBranchName ?? ""}'
-                      : auth.currentBranch?.name ?? 'KinderLog',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                if (auth.isTeacher && auth.currentUser?.pinnedClassId != null) ...[
-                  Text('Class: ${attendance.selectedClassFilter}',
-                      style: TextStyle(fontSize: 11, color: Colors.grey[600])),
-                ],
-              ],
-            ),
+            automaticallyImplyLeading: false,
+            title: _buildAppBarTitle(auth, attendance, isManagement),
             actions: [
-              // Pin class
-              if (auth.isTeacher)
-                PopupMenuButton<String>(
-                  icon: Icon(
-                    attendance.activeClassId != null ? Icons.push_pin_rounded : Icons.push_pin_outlined,
-                    color: attendance.activeClassId != null ? AppTheme.primaryTeal : Colors.grey[600],
-                    size: 22,
-                  ),
-                  tooltip: 'Pin/Substitute',
-                  onSelected: (action) {
-                    if (action == 'pin') _showPinClassDialog(context, auth, attendance);
-                    if (action == 'sub') _showSubstituteDialog(context, auth, attendance);
-                    if (action == 'exit_sub') attendance.exitSubstituteMode();
-                  },
-                  itemBuilder: (context) => [
-                    if (attendance.isSubstituteMode)
-                      const PopupMenuItem(value: 'exit_sub', child: Text('Exit Substitute Mode')),
-                    if (!attendance.isSubstituteMode) ...[
-                      PopupMenuItem(
-                        value: 'pin',
-                        child: Text(attendance.activeClassId != null ? 'Change Pinned Class' : 'Pin a Class'),
-                      ),
-                      const PopupMenuItem(value: 'sub', child: Text('Substitute Teacher Mode')),
-                    ],
-                  ],
-                ),
-              // Logout only
+              if (isManagement)
+                _buildBranchFilter(auth, attendance)
+              else ...[
+                // Teacher: Pin class & Substitute
+                _buildTeacherActions(auth, attendance),
+              ],
+              // Logout
               PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert_rounded, size: 22, color: Colors.grey),
                 onSelected: (action) {
                   if (action == 'logout') {
                     auth.logout();
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const TeacherLoginScreen()));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
                   }
                 },
                 itemBuilder: (context) => [
-                  PopupMenuItem(value: 'logout', child: ListTile(
-                    leading: const Icon(Icons.logout_rounded, size: 20, color: AppTheme.secondaryCoral),
-                    title: const Text('Logout', style: TextStyle(fontSize: 14, color: AppTheme.secondaryCoral)),
+                  const PopupMenuItem(value: 'logout', child: ListTile(
+                    leading: Icon(Icons.logout_rounded, size: 20, color: AppTheme.secondaryCoral),
+                    title: Text('Logout', style: TextStyle(fontSize: 14, color: AppTheme.secondaryCoral)),
                     dense: true, contentPadding: EdgeInsets.zero,
                   )),
                 ],
@@ -120,7 +101,7 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
               Expanded(
-                child: IndexedStack(index: _currentIndex, children: _screens),
+                child: IndexedStack(index: _currentIndex, children: screens),
               ),
             ],
           ),
@@ -128,26 +109,151 @@ class _MainScreenState extends State<MainScreen> {
             selectedIndex: _currentIndex,
             onDestinationSelected: (index) => setState(() => _currentIndex = index),
             indicatorColor: AppTheme.primaryTeal.withValues(alpha: 0.12),
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.dashboard_outlined),
-                selectedIcon: Icon(Icons.dashboard_rounded, color: AppTheme.primaryTeal),
-                label: 'Dashboard',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.how_to_reg_outlined),
-                selectedIcon: Icon(Icons.how_to_reg_rounded, color: AppTheme.primaryTeal),
-                label: 'Attendance',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.people_outline_rounded),
-                selectedIcon: Icon(Icons.people_alt_rounded, color: AppTheme.primaryTeal),
-                label: 'Roster',
-              ),
-            ],
+            destinations: isManagement
+                ? const [
+                    NavigationDestination(
+                      icon: Icon(Icons.dashboard_outlined),
+                      selectedIcon: Icon(Icons.dashboard_rounded, color: AppTheme.primaryTeal),
+                      label: 'Dashboard',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.admin_panel_settings_outlined),
+                      selectedIcon: Icon(Icons.admin_panel_settings_rounded, color: AppTheme.primaryTeal),
+                      label: 'Manage',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.people_outline_rounded),
+                      selectedIcon: Icon(Icons.people_alt_rounded, color: AppTheme.primaryTeal),
+                      label: 'Roster',
+                    ),
+                  ]
+                : const [
+                    NavigationDestination(
+                      icon: Icon(Icons.dashboard_outlined),
+                      selectedIcon: Icon(Icons.dashboard_rounded, color: AppTheme.primaryTeal),
+                      label: 'Dashboard',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.how_to_reg_outlined),
+                      selectedIcon: Icon(Icons.how_to_reg_rounded, color: AppTheme.primaryTeal),
+                      label: 'Attendance',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.people_outline_rounded),
+                      selectedIcon: Icon(Icons.people_alt_rounded, color: AppTheme.primaryTeal),
+                      label: 'Roster',
+                    ),
+                  ],
           ),
         );
       },
+    );
+  }
+
+  // ── App Bar Title ───────────────────────────────────────
+  Widget _buildAppBarTitle(AuthProvider auth, AttendanceProvider attendance, bool isManagement) {
+    if (attendance.isSubstituteMode) {
+      return Text('Sub: ${attendance.substituteBranchName ?? ""}',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold));
+    }
+    if (isManagement) {
+      return const Text('DailyKids',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold));
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          auth.currentBranch?.name ?? 'DailyKids',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        if (auth.currentUser?.pinnedClassId != null)
+          Text('Class: ${attendance.selectedClassFilter}',
+              style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+      ],
+    );
+  }
+
+  // ── Management: Branch filter dropdown ───────────────────
+  Widget _buildBranchFilter(AuthProvider auth, AttendanceProvider attendance) {
+    final branches = auth.branches;
+    final allLabel = 'All Branches';
+    final currentLabel = attendance.activeBranchId.isEmpty
+        ? allLabel
+        : branches.where((b) => b.id == attendance.activeBranchId).firstOrNull?.name ?? allLabel;
+
+    return PopupMenuButton<String>(
+      onSelected: (branchId) {
+        attendance.setBranchFilter(branchId.isEmpty ? null : branchId);
+      },
+      offset: const Offset(0, 40),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        margin: const EdgeInsets.only(right: 4),
+        decoration: BoxDecoration(
+          color: AppTheme.primaryTeal.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(currentLabel,
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.primaryTeal)),
+            const SizedBox(width: 4),
+            const Icon(Icons.arrow_drop_down_rounded, color: AppTheme.primaryTeal, size: 20),
+          ],
+        ),
+      ),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: '',
+          child: Row(
+            children: [
+              Icon(Icons.language_rounded, size: 18, color: attendance.activeBranchId.isEmpty ? AppTheme.primaryTeal : Colors.grey),
+              const SizedBox(width: 8),
+              Text(allLabel, style: TextStyle(fontWeight: attendance.activeBranchId.isEmpty ? FontWeight.bold : FontWeight.normal)),
+            ],
+          ),
+        ),
+        ...branches.map((b) => PopupMenuItem(
+          value: b.id,
+          child: Row(
+            children: [
+              Icon(Icons.school_rounded, size: 18, color: attendance.activeBranchId == b.id ? AppTheme.primaryTeal : Colors.grey),
+              const SizedBox(width: 8),
+              Expanded(child: Text(b.name, style: TextStyle(fontWeight: attendance.activeBranchId == b.id ? FontWeight.bold : FontWeight.normal))),
+            ],
+          ),
+        )),
+      ],
+    );
+  }
+
+  // ── Teacher: Pin class & Substitute ─────────────────────
+  Widget _buildTeacherActions(AuthProvider auth, AttendanceProvider attendance) {
+    return PopupMenuButton<String>(
+      icon: Icon(
+        attendance.activeClassId != null ? Icons.push_pin_rounded : Icons.push_pin_outlined,
+        color: attendance.activeClassId != null ? AppTheme.primaryTeal : Colors.grey[600],
+        size: 22,
+      ),
+      tooltip: 'Pin/Substitute',
+      onSelected: (action) {
+        if (action == 'pin') _showPinClassDialog(context, auth, attendance);
+        if (action == 'sub') _showSubstituteDialog(context, auth, attendance);
+        if (action == 'exit_sub') attendance.exitSubstituteMode();
+      },
+      itemBuilder: (context) => [
+        if (attendance.isSubstituteMode)
+          const PopupMenuItem(value: 'exit_sub', child: Text('Exit Substitute Mode')),
+        if (!attendance.isSubstituteMode) ...[
+          PopupMenuItem(
+            value: 'pin',
+            child: Text(attendance.activeClassId != null ? 'Change Pinned Class' : 'Pin a Class'),
+          ),
+          const PopupMenuItem(value: 'sub', child: Text('Substitute Teacher Mode')),
+        ],
+      ],
     );
   }
 

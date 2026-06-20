@@ -36,6 +36,12 @@ class DashboardScreen extends StatelessWidget {
                 _buildWelcomeHeader(auth, provider),
                 const SizedBox(height: 16),
 
+                // 1b. Management: Per-branch overview cards
+                if (auth.isManagement) ...[
+                  _buildBranchOverviewCards(auth, provider),
+                  const SizedBox(height: 16),
+                ],
+
                 // 2. Today's Attendance Gauge
                 _buildAttendanceGaugeCard(provider),
                 const SizedBox(height: 16),
@@ -71,10 +77,79 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
+  // ── Management: Per-branch overview cards ─────────────────
+  Widget _buildBranchOverviewCards(AuthProvider auth, AttendanceProvider provider) {
+    final branches = auth.branches;
+    if (branches.isEmpty) return const SizedBox.shrink();
+
+    return SizedBox(
+      height: 110,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: branches.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          final branch = branches[index];
+          final branchStudents = provider.students.where((s) => s.branchId == branch.id).toList();
+          final totalStudents = branchStudents.length;
+          final todayPresent = branchStudents.where((s) {
+            final r = provider.getRecordForStudent(s.id);
+            return r != null && (r.status == AttendanceStatus.present || r.status == AttendanceStatus.tardy);
+          }).length;
+          final rate = totalStudents > 0 ? (todayPresent / totalStudents * 100) : 0.0;
+
+          return GestureDetector(
+            onTap: () => provider.setBranchFilter(branch.id),
+            child: Container(
+              width: 170,
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFE5E7EB)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.school_rounded, color: AppTheme.primaryTeal, size: 18),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(branch.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    '${rate.toStringAsFixed(0)}% Today',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: rate >= 80 ? AppTheme.primaryTeal : rate >= 60 ? AppTheme.alertAmber : AppTheme.secondaryCoral,
+                    ),
+                  ),
+                  Text(
+                    '$totalStudents students',
+                    style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildWelcomeHeader(AuthProvider auth, AttendanceProvider provider) {
+    final isManagement = auth.isManagement;
     final branchName = provider.isSubstituteMode
         ? provider.substituteBranchName ?? ''
-        : auth.currentBranch?.name ?? 'All Branches';
+        : auth.currentBranch?.name;
     final userName = auth.currentUser?.name ?? 'Teacher';
 
     return Column(
@@ -85,10 +160,16 @@ class DashboardScreen extends StatelessWidget {
           style: kTitleLarge.copyWith(color: AppTheme.primaryTeal),
         ),
         const SizedBox(height: 2),
-        Text(
-          '$branchName — ${provider.selectedClassFilter}',
-          style: kBodyMedium,
-        ),
+        if (isManagement)
+          Text(
+            branchName != null ? 'Viewing: $branchName' : 'All Branches — School-wide Overview',
+            style: kBodyMedium,
+          )
+        else
+          Text(
+            '$branchName — ${provider.selectedClassFilter}',
+            style: kBodyMedium,
+          ),
       ],
     );
   }

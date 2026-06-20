@@ -45,7 +45,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'KinderLog',
+                    'DailyKids',
                     style: TextStyle(
                       fontSize: 34,
                       fontWeight: FontWeight.bold,
@@ -119,7 +119,7 @@ class LoginScreen extends StatelessWidget {
 
   void _showManagementLogin(BuildContext context) {
     final emailController = TextEditingController(
-      text: 'admin@kinderlog.com',
+      text: 'admin@dailykids.com',
     );
     final formKey = GlobalKey<FormState>();
 

@@ -53,6 +53,18 @@ class FirebaseAttendanceRepository implements AttendanceRepository {
   }
 
   @override
+  Future<List<AttendanceRecord>> getAllRecords() async {
+    try {
+      final snapshot = await _attendanceCollection.get();
+      return snapshot.docs
+          .map((doc) => AttendanceRecord.fromJson(doc.data(), doc.id))
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to load all attendance records from Firestore: $e');
+    }
+  }
+
+  @override
   Future<void> saveAttendanceRecord(AttendanceRecord record) async {
     try {
       await _attendanceCollection.doc(record.id).set(record.toJson());
