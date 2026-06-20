@@ -1,0 +1,77 @@
+# ============================================================
+# KinderLog Monorepo .gitignore
+# ============================================================
+
+# ---- Flutter / Dart ----
+**/build/
+**/.dart_tool/
+**/.packages
+**/.pub/
+**/pubspec.lock
+.dart_tool/
+.packages
+.pub/
+
+# ---- Flutter Android ----
+**/android/app/google-services.json
+**/android/key.properties
+**/android/local.properties
+**/android/.gradle/
+**/android/app/build/
+**/android/build/
+**/android/captures/
+
+# ---- Flutter iOS ----
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/.last_build_id
+**/ios/Runner/GoogleService-Info.plist
+**/ios/build/
+
+# ---- Flutter macOS ----
+**/macos/Pods/
+**/macos/.symlinks/
+**/macos/Flutter/.last_build_id
+**/macos/build/
+
+# ---- Flutter Windows ----
+**/windows/flutter/ephemeral/
+**/windows/flutter/generated_plugin_registrant.cc
+**/windows/flutter/generated_plugin_registrant.h
+**/windows/flutter/generated_plugins.cmake
+
+# ---- Flutter Linux ----
+**/linux/flutter/ephemeral/
+**/linux/flutter/generated_plugin_registrant.cc
+**/linux/flutter/generated_plugin_registrant.h
+**/linux/flutter/generated_plugins.cmake
+
+# ---- Flutter Web ----
+**/web/.flutter-plugins*
+**/web/build/
+
+# ---- Next.js ----
+**/node_modules/
+**/.next/
+**/out/
+**/.turbo/
+
+# ---- IDE & OS ----
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.iml
+
+# ---- Environment & Secrets ----
+.env
+.env.local
+.env.*.local
+*.firebase_config.dart
+
+# ---- Misc ----
+*.log
+*.tmp

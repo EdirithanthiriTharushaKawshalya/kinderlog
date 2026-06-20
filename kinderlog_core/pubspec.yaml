@@ -1,0 +1,23 @@
+name: kinderlog_core
+description: "Shared core package for KinderLog Flutter apps - models, services, theme, and auth."
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.2
+  uuid: ^4.4.0
+  firebase_core: ^3.1.0
+  cloud_firestore: ^5.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
