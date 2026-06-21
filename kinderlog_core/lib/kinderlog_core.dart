@@ -11,6 +11,10 @@ export 'services/firebase_options.dart';
 
 // Theme
 export 'theme/app_theme.dart';
+export 'package:google_fonts/google_fonts.dart';
 
 // Providers
 export 'providers/auth_provider.dart';
+
+// Widgets
+export 'widgets/login_background.dart';

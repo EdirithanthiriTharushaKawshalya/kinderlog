@@ -305,6 +305,9 @@ class _RosterScreenState extends State<RosterScreen> {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Student Roster'),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => _showAddStudentDialog(context),
@@ -391,6 +394,11 @@ class _RosterScreenState extends State<RosterScreen> {
                               return Card(
                                 margin: const EdgeInsets.only(bottom: 10),
                                 elevation: 0,
+                                color: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24),
+                                  side: BorderSide.none,
+                                ),
                                 child: ListTile(
                                   contentPadding: const EdgeInsets.all(12),
                                   leading: CircleAvatar(

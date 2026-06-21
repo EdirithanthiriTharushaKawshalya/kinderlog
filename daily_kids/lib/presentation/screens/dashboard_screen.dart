@@ -42,9 +42,11 @@ class DashboardScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                 ],
 
-                // 2. Today's Attendance Gauge
-                _buildAttendanceGaugeCard(provider),
-                const SizedBox(height: 16),
+                // 2. Attendance Analytics (Moved from below to top)
+                const Text('Attendance Analytics', style: kTitleMedium),
+                const SizedBox(height: 8),
+                _buildTimeframeAnalytics(provider),
+                const SizedBox(height: 24),
 
                 // 3. Today's Summary
                 const Text('Today\'s Summary', style: kTitleMedium),
@@ -56,17 +58,11 @@ class DashboardScreen extends StatelessWidget {
                 _buildUncheckedSection(provider, uncheckedStudents),
                 const SizedBox(height: 24),
 
-                // 5. Multi-Timeframe Analytics
-                const Text('Attendance Analytics', style: kTitleMedium),
-                const SizedBox(height: 8),
-                _buildTimeframeAnalytics(provider),
-                const SizedBox(height: 24),
-
-                // 6. Top & Low Attenders
+                // 5. Top & Low Attenders
                 _buildTopLowAttenders(context, provider),
                 const SizedBox(height: 24),
 
-                // 7. Parent Absence Monitoring
+                // 6. Parent Absence Monitoring
                 _buildParentMonitoring(context, provider),
                 const SizedBox(height: 24),
               ],
@@ -114,7 +110,7 @@ class DashboardScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.school_rounded, color: AppTheme.primaryTeal, size: 18),
+                      const Icon(Icons.school_rounded, color: Colors.black87, size: 18),
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(branch.name,
@@ -156,8 +152,10 @@ class DashboardScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Good morning, $userName! ✏️',
-          style: kTitleLarge.copyWith(color: AppTheme.primaryTeal),
+          'Good morning, $userName',
+          style: isManagement
+              ? kTitleMedium.copyWith(color: Colors.black, fontSize: 20)
+              : kTitleLarge.copyWith(color: Colors.black),
         ),
         const SizedBox(height: 2),
         if (isManagement)
@@ -171,89 +169,6 @@ class DashboardScreen extends StatelessWidget {
             style: kBodyMedium,
           ),
       ],
-    );
-  }
-
-  Widget _buildAttendanceGaugeCard(AttendanceProvider provider) {
-    final rate = provider.attendancePercentage;
-    final total = provider.totalCount;
-    final present = provider.presentCount + provider.tardyCount;
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppTheme.primaryTeal, Color(0xFF6941C6)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primaryTeal.withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            height: 80,
-            width: 80,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                CircularProgressIndicator(
-                  value: total > 0 ? (present / total) : 0.0,
-                  strokeWidth: 8,
-                  backgroundColor: Colors.white.withOpacity(0.2),
-                  color: Colors.white,
-                ),
-                Center(
-                  child: Text(
-                    '${rate.toStringAsFixed(0)}%',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 24),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Daily Attendance Rate',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '$present out of $total students are present today.',
-                  style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.85)),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    '${provider.uncheckedCount} children waiting to be marked',
-                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -461,44 +376,52 @@ class DashboardScreen extends StatelessWidget {
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (ctx) {
-        return Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40, height: 4,
-                  decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
-                ),
+        return SafeArea(
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(ctx).size.height * 0.75,
+            ),
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40, height: 4,
+                      decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    '${tf['label']} — ${(tf['overall'] as double).toStringAsFixed(1)}% Overall',
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  const SizedBox(height: 16),
+                  if (top.isNotEmpty) ...[
+                    const Text('Top Attenders', style: kTitleMedium),
+                    const SizedBox(height: 8),
+                    ...top.map((e) => _attendeeRow(e.key.name, e.value, AppTheme.primaryTeal)),
+                  ],
+                  const SizedBox(height: 16),
+                  if (low.isNotEmpty) ...[
+                    const Text('Low Attenders', style: kTitleMedium),
+                    const SizedBox(height: 8),
+                    ...low.map((e) => _attendeeRow(e.key.name, e.value, AppTheme.secondaryCoral)),
+                  ],
+                  if (top.isEmpty && low.isEmpty)
+                    const Text('Not enough data for this period.',
+                        style: TextStyle(color: Colors.grey)),
+                  const SizedBox(height: 20),
+                ],
               ),
-              const SizedBox(height: 20),
-              Text(
-                '${tf['label']} — ${(tf['overall'] as double).toStringAsFixed(1)}% Overall',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              const SizedBox(height: 16),
-              if (top.isNotEmpty) ...[
-                const Text('Top Attenders', style: kTitleMedium),
-                const SizedBox(height: 8),
-                ...top.map((e) => _attendeeRow(e.key.name, e.value, AppTheme.primaryTeal)),
-              ],
-              const SizedBox(height: 16),
-              if (low.isNotEmpty) ...[
-                const Text('Low Attenders', style: kTitleMedium),
-                const SizedBox(height: 8),
-                ...low.map((e) => _attendeeRow(e.key.name, e.value, AppTheme.secondaryCoral)),
-              ],
-              if (top.isEmpty && low.isEmpty)
-                const Text('Not enough data for this period.',
-                    style: TextStyle(color: Colors.grey)),
-              const SizedBox(height: 20),
-            ],
+            ),
           ),
         );
       },

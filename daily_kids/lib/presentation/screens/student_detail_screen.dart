@@ -43,7 +43,6 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               title: const Text('Edit Student Profile', style: TextStyle(fontWeight: FontWeight.bold)),
               content: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.85,
@@ -189,7 +188,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         title: Text(_currentStudent.name),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit_rounded, color: AppTheme.primaryTeal),
+            icon: const Icon(Icons.edit_rounded, color: Colors.black87),
             onPressed: () => _showEditStudentDialog(context),
             tooltip: 'Edit Profile',
           )
@@ -299,7 +298,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.family_restroom_rounded, color: AppTheme.primaryTeal, size: 20),
+              const Icon(Icons.family_restroom_rounded, color: Colors.black87, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Parent / Guardian Info',
@@ -331,7 +330,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                   minimumSize: const Size(80, 36),
                   backgroundColor: AppTheme.primaryTeal,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: const StadiumBorder(),
                 ),
                 onPressed: () => _simulateContact('Call', _currentStudent.parentPhone),
                 icon: const Icon(Icons.phone, size: 14),
@@ -343,7 +342,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                   minimumSize: const Size(80, 36),
                   foregroundColor: AppTheme.primaryTeal,
                   side: const BorderSide(color: AppTheme.primaryTeal),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: const StadiumBorder(),
                 ),
                 onPressed: () => _simulateContact('SMS', _currentStudent.parentPhone),
                 icon: const Icon(Icons.message_rounded, size: 14),
@@ -356,7 +355,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
             const Divider(height: 28),
             Row(
               children: [
-                const Icon(Icons.people_rounded, color: AppTheme.excusedIndigo, size: 16),
+                const Icon(Icons.people_rounded, color: Colors.black87, size: 16),
                 const SizedBox(width: 6),
                 Text(
                   'Additional Guardians (${_currentStudent.guardians.length})',

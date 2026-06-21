@@ -132,24 +132,32 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   void _showDetail(BuildContext context, AppNotification n) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
-            const SizedBox(height: 20),
-            Text(n.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            Text('From: ${n.senderName} · ${_formatTime(n.sentAt)}', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
-            if (n.target != NotificationTarget.all)
-              Text('Target: ${n.targetName ?? n.target.name}', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
-            const SizedBox(height: 16),
-            Text(n.body, style: const TextStyle(fontSize: 14, height: 1.5)),
-            const SizedBox(height: 20),
-          ],
+      builder: (ctx) => SafeArea(
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(ctx).size.height * 0.75,
+          ),
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
+                const SizedBox(height: 20),
+                Text(n.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text('From: ${n.senderName} · ${_formatTime(n.sentAt)}', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+                if (n.target != NotificationTarget.all)
+                  Text('Target: ${n.targetName ?? n.target.name}', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+                const SizedBox(height: 16),
+                Text(n.body, style: const TextStyle(fontSize: 14, height: 1.5)),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
         ),
       ),
     );

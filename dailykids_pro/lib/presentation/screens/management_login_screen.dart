@@ -3,15 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:kinderlog_core/kinderlog_core.dart';
 import 'main_screen.dart';
 
-class TeacherLoginScreen extends StatefulWidget {
-  const TeacherLoginScreen({super.key});
+class ManagementLoginScreen extends StatefulWidget {
+  const ManagementLoginScreen({super.key});
 
   @override
-  State<TeacherLoginScreen> createState() => _TeacherLoginScreenState();
+  State<ManagementLoginScreen> createState() => _ManagementLoginScreenState();
 }
 
-class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
-  final _emailController = TextEditingController();
+class _ManagementLoginScreenState extends State<ManagementLoginScreen> {
+  final _emailController = TextEditingController(text: 'admin@dailykids.com');
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -36,14 +36,14 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.person_rounded,
+                  Icons.admin_panel_settings_rounded,
                   size: 40,
                   color: AppTheme.primaryTeal,
                 ),
               ),
               const SizedBox(height: 12),
               Text(
-                'Teacher Login',
+                'Management Login',
                 style: kTitleLarge.copyWith(
                   fontSize: 26,
                   color: Colors.white,
@@ -67,9 +67,9 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(
-                    labelText: 'Teacher Email',
+                    labelText: 'Management Email',
                     prefixIcon: Icon(Icons.email_outlined, size: 20, color: Colors.black54),
-                    hintText: 'teacher@dailykids.com',
+                    hintText: 'admin@dailykids.com',
                   ),
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.done,
@@ -80,7 +80,7 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                   },
                   onFieldSubmitted: (_) => _handleLogin(auth),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
                 // Login button
                 SizedBox(
                   width: double.infinity,
@@ -120,38 +120,6 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                     ),
                   ),
                 ],
-                const SizedBox(height: 32),
-                // Pre-filled demo emails hint
-                Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8F9FC),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xFFE5E7EB)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.info_outline, size: 14, color: Colors.black87),
-                          const SizedBox(width: 6),
-                          Text(
-                            'Demo Teacher Accounts',
-                            style: kTitleMedium.copyWith(
-                              fontSize: 12,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      _buildDemoEmail('nimali@dailykids.com', 'Ambalangoda - FS1'),
-                      _buildDemoEmail('sunil@dailykids.com', 'Ambalangoda - FS2'),
-                      _buildDemoEmail('kumari@dailykids.com', 'Hikkaduwa - FS1'),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
@@ -162,7 +130,7 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
 
   void _handleLogin(AuthProvider auth) async {
     if (_formKey.currentState?.validate() ?? false) {
-      final ok = await auth.loginAsTeacher(_emailController.text.trim());
+      final ok = await auth.loginAsManagement(_emailController.text.trim());
       if (ok && mounted) {
         Navigator.pushAndRemoveUntil(
           context,
@@ -171,32 +139,5 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
         );
       }
     }
-  }
-
-  Widget _buildDemoEmail(String email, String role) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: InkWell(
-        onTap: () {
-          _emailController.text = email;
-          setState(() {});
-        },
-        child: Row(
-          children: [
-            const Icon(Icons.email_outlined, size: 13, color: Colors.black54),
-            const SizedBox(width: 6),
-            Text(
-              email,
-              style: kBodyMedium.copyWith(fontSize: 12, color: Colors.black87),
-            ),
-            const SizedBox(width: 6),
-            Text(
-              '($role)',
-              style: kBodyMedium.copyWith(fontSize: 11, color: Colors.grey[600]),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

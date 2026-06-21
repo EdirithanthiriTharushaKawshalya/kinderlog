@@ -32,10 +32,10 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.6, end: 1.0).animate(
+    _scaleAnimation = Tween<double>(begin: 0.85, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.0, 0.6, curve: Curves.elasticOut),
+        curve: const Interval(0.0, 0.6, curve: Curves.easeOutCubic),
       ),
     );
 
@@ -75,57 +75,17 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppTheme.primaryTeal,
-              Color(0xFF6941C6),
-              Color(0xFF42307D),
-            ],
-          ),
-        ),
+        color: Colors.white,
         child: AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
             return Stack(
               fit: StackFit.expand,
               children: [
-                // Decorative circles
-                Positioned(
-                  top: -80,
-                  right: -60,
-                  child: Opacity(
-                    opacity: _fadeAnimation.value * 0.15,
-                    child: Container(
-                      width: 260,
-                      height: 260,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: -100,
-                  left: -80,
-                  child: Opacity(
-                    opacity: _fadeAnimation.value * 0.1,
-                    child: Container(
-                      width: 300,
-                      height: 300,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
                 // Center content
                 Center(
                   child: Column(
@@ -150,23 +110,22 @@ class _SplashScreenState extends State<SplashScreen>
                             child: Opacity(
                               opacity: _fadeAnimation.value,
                               child: Column(
-                                children: const [
+                                children: [
                                   Text(
                                     'DailyKids',
-                                    style: TextStyle(
+                                    style: kTitleLarge.copyWith(
                                       fontSize: 40,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                      color: const Color(0xFF1D2939),
                                       letterSpacing: 1.2,
                                     ),
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   Text(
                                     'PRO',
-                                    style: TextStyle(
+                                    style: kBodyMedium.copyWith(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.white70,
+                                      color: Colors.black54,
                                       letterSpacing: 6,
                                     ),
                                   ),
@@ -175,19 +134,6 @@ class _SplashScreenState extends State<SplashScreen>
                             ),
                           );
                         },
-                      ),
-                      const SizedBox(height: 48),
-                      // Subtitle
-                      Opacity(
-                        opacity: _fadeAnimation.value,
-                        child: Text(
-                          'Every child. Every day.',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.white.withOpacity(0.7),
-                          ),
-                        ),
                       ),
                     ],
                   ),

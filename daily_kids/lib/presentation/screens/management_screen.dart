@@ -42,14 +42,14 @@ class _ManagementScreenState extends State<ManagementScreen> {
       children: auth.branches.map((branch) {
         final classCount = auth.classes.where((c) => c.branchId == branch.id).length;
         return ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           leading: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppTheme.primaryTeal.withOpacity(0.08),
+              color: Colors.black.withOpacity(0.05),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.school_rounded, color: AppTheme.primaryTeal, size: 22),
+            child: const Icon(Icons.school_rounded, color: Colors.black87, size: 22),
           ),
           title: Text(branch.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
           subtitle: Text('${branch.location}  ·  $classCount classes',
@@ -76,14 +76,14 @@ class _ManagementScreenState extends State<ManagementScreen> {
         final branch = auth.branches.where((b) => b.id == cls.branchId).firstOrNull;
         final teacher = auth.users.where((u) => u.id == cls.teacherId).firstOrNull;
         return ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           leading: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppTheme.alertAmber.withOpacity(0.08),
+              color: Colors.black.withOpacity(0.05),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.meeting_room_rounded, color: AppTheme.alertAmber, size: 22),
+            child: const Icon(Icons.meeting_room_rounded, color: Colors.black87, size: 22),
           ),
           title: Text(cls.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
           subtitle: Text(
@@ -113,12 +113,12 @@ class _ManagementScreenState extends State<ManagementScreen> {
         final branch = auth.branches.where((b) => b.id == user.branchId).firstOrNull;
         final pinnedClass = auth.classes.where((c) => c.id == user.pinnedClassId).firstOrNull;
         return ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           leading: CircleAvatar(
-            backgroundColor: AppTheme.excusedIndigo.withOpacity(0.1),
+            backgroundColor: Colors.black.withOpacity(0.05),
             child: Text(
               user.name.isNotEmpty ? user.name[0].toUpperCase() : 'T',
-              style: const TextStyle(color: AppTheme.excusedIndigo, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
             ),
           ),
           title: Text(user.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
@@ -145,7 +145,6 @@ class _ManagementScreenState extends State<ManagementScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('Add New Branch', style: TextStyle(fontWeight: FontWeight.bold)),
         content: Form(
           key: formKey,
@@ -193,7 +192,6 @@ class _ManagementScreenState extends State<ManagementScreen> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: const Text('Add New Class', style: TextStyle(fontWeight: FontWeight.bold)),
           content: Form(
             key: formKey,
@@ -247,7 +245,6 @@ class _ManagementScreenState extends State<ManagementScreen> {
         builder: (ctx, setDialogState) {
           final branchClasses = auth.classes.where((c) => c.branchId == selectedBranchId).toList();
           return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             title: const Text('Add New Teacher', style: TextStyle(fontWeight: FontWeight.bold)),
             content: Form(
               key: formKey,
@@ -324,7 +321,6 @@ class _ManagementScreenState extends State<ManagementScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('Confirm Delete', style: TextStyle(fontWeight: FontWeight.bold)),
         content: Text('Are you sure you want to remove $item?'),
         actions: [
@@ -364,7 +360,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
             padding: const EdgeInsets.fromLTRB(16, 16, 8, 4),
             child: Row(
               children: [
-                Icon(icon, color: AppTheme.primaryTeal, size: 22),
+                Icon(icon, color: Colors.black87, size: 22),
                 const SizedBox(width: 10),
                 Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
                 const SizedBox(width: 8),

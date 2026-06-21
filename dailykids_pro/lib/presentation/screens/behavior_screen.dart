@@ -9,7 +9,8 @@ import '../../data/models/behavior_model.dart';
 
 /// Confidential behavioral & discipline logging with parent collaboration.
 class BehaviorScreen extends StatefulWidget {
-  const BehaviorScreen({super.key});
+  final bool hideAppBar;
+  const BehaviorScreen({super.key, this.hideAppBar = false});
 
   @override
   State<BehaviorScreen> createState() => _BehaviorScreenState();
@@ -35,26 +36,52 @@ class _BehaviorScreenState extends State<BehaviorScreen> with SingleTickerProvid
     return Consumer<BehaviorProvider>(
       builder: (context, behavior, _) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Behavior Logs'),
-            bottom: TabBar(
-              controller: _tabController,
-              indicatorColor: AppTheme.primaryTeal,
-              labelColor: AppTheme.primaryTeal,
-              unselectedLabelColor: Colors.grey,
-              tabs: [
-                Tab(text: 'Active (${behavior.activeLogs.length})'),
-                Tab(text: 'Resolved (${behavior.resolvedLogs.length})'),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            controller: _tabController,
-            children: [
-              _logsList(behavior.activeLogs, behavior),
-              _logsList(behavior.resolvedLogs, behavior),
-            ],
-          ),
+          appBar: widget.hideAppBar
+              ? null
+              : AppBar(
+                  title: const Text('Behavior Logs'),
+                  bottom: TabBar(
+                    controller: _tabController,
+                    indicatorColor: AppTheme.primaryTeal,
+                    labelColor: AppTheme.primaryTeal,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: [
+                      Tab(text: 'Active (${behavior.activeLogs.length})'),
+                      Tab(text: 'Resolved (${behavior.resolvedLogs.length})'),
+                    ],
+                  ),
+                ),
+          body: widget.hideAppBar
+              ? Column(
+                  children: [
+                    TabBar(
+                      controller: _tabController,
+                      indicatorColor: AppTheme.primaryTeal,
+                      labelColor: AppTheme.primaryTeal,
+                      unselectedLabelColor: Colors.grey,
+                      tabs: [
+                        Tab(text: 'Active (${behavior.activeLogs.length})'),
+                        Tab(text: 'Resolved (${behavior.resolvedLogs.length})'),
+                      ],
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _logsList(behavior.activeLogs, behavior),
+                          _logsList(behavior.resolvedLogs, behavior),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              : TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _logsList(behavior.activeLogs, behavior),
+                    _logsList(behavior.resolvedLogs, behavior),
+                  ],
+                ),
           floatingActionButton: FloatingActionButton(
             backgroundColor: AppTheme.primaryTeal,
             onPressed: () => _showReportDialog(context, behavior),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Brand & Status Colors
@@ -9,8 +10,8 @@ class AppTheme {
   static const Color bgGrey = Color(0xFFF8F9FE); // Warm Lavender scaffold background
 
   static ThemeData get lightTheme {
-    return ThemeData(
-      useMaterial3: true,
+    final baseTheme = ThemeData.light(useMaterial3: true);
+    return baseTheme.copyWith(
       colorScheme: ColorScheme.fromSeed(
         seedColor: primaryTeal,
         primary: primaryTeal,
@@ -18,16 +19,39 @@ class AppTheme {
         surface: Colors.white,
       ),
       scaffoldBackgroundColor: bgGrey,
-      appBarTheme: const AppBarTheme(
+      textTheme: GoogleFonts.plusJakartaSansTextTheme(baseTheme.textTheme).copyWith(
+        titleLarge: GoogleFonts.fredoka(
+          textStyle: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1D2939),
+            letterSpacing: -0.5,
+          ),
+        ),
+        titleMedium: GoogleFonts.fredoka(
+          textStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1D2939),
+            letterSpacing: -0.2,
+          ),
+        ),
+      ),
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: false,
-        titleTextStyle: TextStyle(
-          color: Color(0xFF1D2939), // Charcoal text
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
         ),
-        iconTheme: IconThemeData(color: primaryTeal),
+        titleTextStyle: GoogleFonts.fredoka(
+          textStyle: const TextStyle(
+            color: Color(0xFF1D2939), // Charcoal text
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.black87), // keep them black
       ),
       cardTheme: CardThemeData(
         color: Colors.white,
@@ -53,20 +77,81 @@ class AppTheme {
           borderSide: const BorderSide(color: primaryTeal, width: 2),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        labelStyle: GoogleFonts.plusJakartaSans(color: Colors.black54),
+        hintStyle: GoogleFonts.plusJakartaSans(color: Colors.black38),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryTeal,
           foregroundColor: Colors.white,
-          minimumSize: const Size.fromHeight(50),
+          minimumSize: const Size(88, 48),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(28), // Fully rounded buttons
           ),
-          textStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
+          textStyle: GoogleFonts.plusJakartaSans(
+            textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
           ),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: primaryTeal,
+          minimumSize: const Size(88, 48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+          side: const BorderSide(color: primaryTeal, width: 1.5),
+          textStyle: GoogleFonts.plusJakartaSans(
+            textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: primaryTeal,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+          textStyle: GoogleFonts.plusJakartaSans(
+            textStyle: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: Colors.white,
+        elevation: 6,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(28), // Professional corners
+        ),
+        titleTextStyle: GoogleFonts.fredoka(
+          textStyle: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1D2939),
+          ),
+        ),
+        contentTextStyle: GoogleFonts.plusJakartaSans(
+          textStyle: const TextStyle(
+            fontSize: 14,
+            color: Colors.black87,
+          ),
+        ),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: Colors.white,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20), // Rounded corners dropdowns
         ),
       ),
     );
@@ -76,19 +161,22 @@ class AppTheme {
 // Custom text styling helpers
 const TextStyle kTitleLarge = TextStyle(
   fontSize: 24,
-  fontWeight: FontWeight.bold,
+  fontWeight: FontWeight.w600,
   color: Color(0xFF1D2939), // Charcoal
   letterSpacing: -0.5,
+  fontFamily: 'Fredoka',
 );
 
 const TextStyle kTitleMedium = TextStyle(
   fontSize: 18,
-  fontWeight: FontWeight.bold,
+  fontWeight: FontWeight.w600,
   color: Color(0xFF1D2939), // Charcoal
   letterSpacing: -0.2,
+  fontFamily: 'Fredoka',
 );
 
 const TextStyle kBodyMedium = TextStyle(
   fontSize: 14,
   color: Colors.black54,
+  fontFamily: 'Plus Jakarta Sans',
 );

@@ -52,7 +52,6 @@ class AttendanceCard extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Text(
             'Attendance Note for ${student.name}',
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

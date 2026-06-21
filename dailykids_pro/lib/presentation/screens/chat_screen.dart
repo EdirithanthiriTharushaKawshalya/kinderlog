@@ -276,12 +276,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   const SizedBox(height: 14),
                   // Teacher dropdown
                   DropdownButtonFormField<String>(
+                    isExpanded: true,
                     value: selectedTeacherId,
                     decoration: const InputDecoration(
                       labelText: 'Teacher',
                       prefixIcon: Icon(Icons.person_rounded, size: 20),
                     ),
-                    items: teachers.map((t) => DropdownMenuItem(value: t.id, child: Text(t.name))).toList(),
+                    items: teachers.map((t) => DropdownMenuItem(value: t.id, child: Text(t.name, overflow: TextOverflow.ellipsis))).toList(),
                     onChanged: (v) {
                       setDialogState(() {
                         selectedTeacherId = v;
@@ -403,12 +404,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   const SizedBox(height: 14),
                   // Student dropdown
                   DropdownButtonFormField<String>(
+                    isExpanded: true,
                     value: selectedStudentId,
                     decoration: const InputDecoration(
                       labelText: 'Student',
                       prefixIcon: Icon(Icons.child_care_rounded, size: 20),
                     ),
-                    items: studentOptions.map((s) => DropdownMenuItem(value: s.id, child: Text('${s.name} (${s.classroom})'))).toList(),
+                    items: studentOptions.map((s) => DropdownMenuItem(value: s.id, child: Text('${s.name} (${s.classroom})', overflow: TextOverflow.ellipsis))).toList(),
                     onChanged: (v) {
                       setDialogState(() {
                         selectedStudentId = v;

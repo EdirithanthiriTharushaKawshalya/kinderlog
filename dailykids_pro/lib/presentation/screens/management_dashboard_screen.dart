@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:kinderlog_core/kinderlog_core.dart';
 import 'main_screen.dart';
-import 'admission_review_screen.dart';
 import 'fee_dashboard_screen.dart';
 import 'notifications_screen.dart';
 import 'calendar_screen.dart';
@@ -51,8 +50,6 @@ class _ManagementDashboardScreenState extends State<ManagementDashboardScreen> {
                             context,
                             MaterialPageRoute(builder: (_) => const MainScreen()),
                           );
-                        } else if (value == 'admissions') {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const AdmissionReviewScreen()));
                         } else if (value == 'fees') {
                           Navigator.push(context, MaterialPageRoute(builder: (_) => const FeeDashboardScreen()));
                         } else if (value == 'notifications') {
@@ -66,7 +63,6 @@ class _ManagementDashboardScreenState extends State<ManagementDashboardScreen> {
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(value: 'admissions', child: Text('Admission Review')),
                         const PopupMenuItem(value: 'fees', child: Text('Fees & Payments')),
                         const PopupMenuItem(value: 'notifications', child: Text('Notifications')),
                         const PopupMenuItem(value: 'calendar', child: Text('School Calendar')),

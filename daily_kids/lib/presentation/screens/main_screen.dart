@@ -105,45 +105,67 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ],
           ),
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: _currentIndex,
-            onDestinationSelected: (index) => setState(() => _currentIndex = index),
-            indicatorColor: AppTheme.primaryTeal.withValues(alpha: 0.12),
-            destinations: isManagement
-                ? const [
-                    NavigationDestination(
-                      icon: Icon(Icons.dashboard_outlined),
-                      selectedIcon: Icon(Icons.dashboard_rounded, color: AppTheme.primaryTeal),
-                      label: 'Dashboard',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.admin_panel_settings_outlined),
-                      selectedIcon: Icon(Icons.admin_panel_settings_rounded, color: AppTheme.primaryTeal),
-                      label: 'Manage',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.people_outline_rounded),
-                      selectedIcon: Icon(Icons.people_alt_rounded, color: AppTheme.primaryTeal),
-                      label: 'Roster',
-                    ),
-                  ]
-                : const [
-                    NavigationDestination(
-                      icon: Icon(Icons.dashboard_outlined),
-                      selectedIcon: Icon(Icons.dashboard_rounded, color: AppTheme.primaryTeal),
-                      label: 'Dashboard',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.how_to_reg_outlined),
-                      selectedIcon: Icon(Icons.how_to_reg_rounded, color: AppTheme.primaryTeal),
-                      label: 'Attendance',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.people_outline_rounded),
-                      selectedIcon: Icon(Icons.people_alt_rounded, color: AppTheme.primaryTeal),
-                      label: 'Roster',
-                    ),
-                  ],
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.06),
+                  blurRadius: 10,
+                  offset: const Offset(0, -4),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              child: SafeArea(
+                child: NavigationBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  height: 64,
+                  selectedIndex: _currentIndex,
+                  onDestinationSelected: (index) => setState(() => _currentIndex = index),
+                  indicatorColor: Colors.black.withOpacity(0.06),
+                  labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+                  destinations: isManagement
+                      ? const [
+                          NavigationDestination(
+                            icon: Icon(Icons.grid_view_outlined, color: Colors.black45),
+                            selectedIcon: Icon(Icons.grid_view_rounded, color: Colors.black87),
+                            label: 'Dashboard',
+                          ),
+                          NavigationDestination(
+                            icon: Icon(Icons.tune_outlined, color: Colors.black45),
+                            selectedIcon: Icon(Icons.tune_rounded, color: Colors.black87),
+                            label: 'Manage',
+                          ),
+                          NavigationDestination(
+                            icon: Icon(Icons.badge_outlined, color: Colors.black45),
+                            selectedIcon: Icon(Icons.badge_rounded, color: Colors.black87),
+                            label: 'Roster',
+                          ),
+                        ]
+                      : const [
+                          NavigationDestination(
+                            icon: Icon(Icons.grid_view_outlined, color: Colors.black45),
+                            selectedIcon: Icon(Icons.grid_view_rounded, color: Colors.black87),
+                            label: 'Dashboard',
+                          ),
+                          NavigationDestination(
+                            icon: Icon(Icons.fact_check_outlined, color: Colors.black45),
+                            selectedIcon: Icon(Icons.fact_check_rounded, color: Colors.black87),
+                            label: 'Attendance',
+                          ),
+                          NavigationDestination(
+                            icon: Icon(Icons.badge_outlined, color: Colors.black45),
+                            selectedIcon: Icon(Icons.badge_rounded, color: Colors.black87),
+                            label: 'Roster',
+                          ),
+                        ],
+                ),
+              ),
+            ),
           ),
         );
       },

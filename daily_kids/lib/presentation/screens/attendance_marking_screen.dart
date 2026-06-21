@@ -40,7 +40,7 @@ class _AttendanceMarkingScreenState extends State<AttendanceMarkingScreen> {
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: 'Search child name...',
-                    prefixIcon: const Icon(Icons.search, color: AppTheme.primaryTeal),
+                    prefixIcon: const Icon(Icons.search, color: Colors.black54),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, color: Colors.grey),
