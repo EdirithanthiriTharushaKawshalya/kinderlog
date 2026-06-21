@@ -131,21 +131,13 @@ class _SplashScreenState extends State<SplashScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Logo icon
+                      // Logo
                       Transform.scale(
                         scale: _scaleAnimation.value,
-                        child: Container(
+                        child: Image.asset(
+                          'assets/logo.png',
                           width: 100,
                           height: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(28),
-                          ),
-                          child: const Icon(
-                            Icons.child_care_rounded,
-                            size: 56,
-                            color: Colors.white,
-                          ),
                         ),
                       ),
                       const SizedBox(height: 24),

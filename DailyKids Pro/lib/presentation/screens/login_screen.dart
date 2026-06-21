@@ -33,18 +33,10 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 40),
                   // Logo
-                  Container(
+                  Image.asset(
+                    'assets/logo.png',
                     width: 80,
                     height: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(22),
-                    ),
-                    child: const Icon(
-                      Icons.child_care_rounded,
-                      size: 44,
-                      color: Colors.white,
-                    ),
                   ),
                   const SizedBox(height: 20),
                   const Text(
