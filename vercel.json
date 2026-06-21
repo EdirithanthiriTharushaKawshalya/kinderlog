@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd \"DailyKids Web\" && npm run build",
-  "outputDirectory": "DailyKids Web/.next",
-  "installCommand": "cd \"DailyKids Web\" && npm install"
+  "buildCommand": "cd dailykids_web && npm run build",
+  "outputDirectory": "dailykids_web/.next",
+  "installCommand": "cd dailykids_web && npm install"
 }
