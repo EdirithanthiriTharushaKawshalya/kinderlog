@@ -167,23 +167,6 @@ export default function AdminPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-zinc-200">
-        <nav className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/DailyKids.png" alt="DailyKids" width={40} height={40} className="h-10 w-auto" />
-            <span className="text-xl font-bold text-teal-700">DailyKids</span>
-          </Link>
-          <div className="flex items-center gap-6 text-sm font-medium">
-            <Link href="/" className="text-zinc-600 hover:text-teal-700 transition-colors">
-              Home
-            </Link>
-            <Link href="/admin" className="text-teal-700 border-b-2 border-teal-600 pb-1">
-              Admin
-            </Link>
-          </div>
-        </nav>
-      </header>
-
       <main className="flex-1 max-w-5xl mx-auto px-6 py-16 w-full">
         {/* Tab bar */}
         <div className="flex gap-2 mb-10">
@@ -287,12 +270,12 @@ export default function AdminPage() {
                     )}
 
                     {(app.status === "pending" || app.status === "underReview") && (
-                      <div className="flex gap-3 pt-2 border-t border-zinc-100">
-                        <button onClick={() => updateAdmissionStatus(app.id, "approved")} className="flex-1 bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-colors">Approve</button>
+                      <div className="flex flex-col sm:flex-row gap-3 pt-2 border-t border-zinc-100">
+                        <button onClick={() => updateAdmissionStatus(app.id, "approved")} className="w-full sm:flex-1 bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-colors text-center">Approve</button>
                         {app.status === "pending" && (
-                          <button onClick={() => updateAdmissionStatus(app.id, "underReview")} className="flex-1 bg-indigo-600 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors">Mark in Review</button>
+                          <button onClick={() => updateAdmissionStatus(app.id, "underReview")} className="w-full sm:flex-1 bg-indigo-600 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors text-center">Mark in Review</button>
                         )}
-                        <button onClick={() => updateAdmissionStatus(app.id, "rejected")} className="flex-1 bg-red-500 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-red-600 transition-colors">Reject</button>
+                        <button onClick={() => updateAdmissionStatus(app.id, "rejected")} className="w-full sm:flex-1 bg-red-500 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-red-600 transition-colors text-center">Reject</button>
                       </div>
                     )}
                   </div>
@@ -391,16 +374,16 @@ export default function AdminPage() {
                     />
                   </div>
                 </div>
-                <div className="flex gap-3 pt-2">
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <button
                     onClick={saveBranch}
-                    className="bg-teal-600 text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-teal-700 transition-colors"
+                    className="w-full sm:w-auto bg-teal-600 text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-teal-700 transition-colors text-center"
                   >
                     {editingBranch ? "Update Branch" : "Save Branch"}
                   </button>
                   <button
                     onClick={resetBranchForm}
-                    className="bg-white border border-zinc-300 text-zinc-600 px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-zinc-50 transition-colors"
+                    className="w-full sm:w-auto bg-white border border-zinc-300 text-zinc-600 px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-zinc-50 transition-colors text-center"
                   >
                     Cancel
                   </button>
@@ -465,15 +448,6 @@ export default function AdminPage() {
           </>
         )}
       </main>
-
-      <footer className="bg-white border-t border-zinc-200 text-zinc-500 py-12">
-        <div className="max-w-6xl mx-auto px-6 text-center text-sm">
-          <p>
-            <span className="text-zinc-800 font-semibold">DailyKids Preschool</span>{" "}
-            &copy; {new Date().getFullYear()}
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

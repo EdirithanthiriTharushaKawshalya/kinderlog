@@ -72,29 +72,6 @@ const branches = [
 export default function Home() {
   return (
     <div className="flex flex-col">
-      {/* Header / Navigation */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-zinc-200">
-        <nav className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/DailyKids.png" alt="DailyKids" width={40} height={40} className="h-10 w-auto" />
-            <span className="text-xl font-bold text-teal-700">DailyKids</span>
-          </Link>
-          <div className="flex items-center gap-6 text-sm font-medium">
-            <Link href="/" className="text-teal-700 border-b-2 border-teal-600 pb-1">
-              Home
-            </Link>
-            <Link href="/branches" className="text-zinc-600 hover:text-teal-700 transition-colors">
-              Branches
-            </Link>
-            <Link
-              href="/admissions/apply"
-              className="bg-teal-600 text-white px-5 py-2 rounded-full hover:bg-teal-700 transition-colors"
-            >
-              Apply Now
-            </Link>
-          </div>
-        </nav>
-      </header>
 
       {/* Hero */}
       <section className="bg-gradient-to-br from-teal-600 to-teal-800 text-white">
@@ -108,16 +85,16 @@ export default function Home() {
             Every child is unique. Our play-based curriculum fosters curiosity,
             creativity, and confidence in a safe, nurturing environment.
           </p>
-          <div className="flex gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/admissions/apply"
-              className="bg-white text-teal-700 px-8 py-3 rounded-full font-semibold hover:bg-teal-50 transition-colors"
+              className="w-full sm:w-auto text-center bg-white text-teal-700 px-8 py-3 rounded-full font-semibold hover:bg-teal-50 transition-colors"
             >
               Start Application
             </Link>
             <Link
               href="/branches"
-              className="border-2 border-white/40 text-white px-8 py-3 rounded-full font-semibold hover:bg-white/10 transition-colors"
+              className="w-full sm:w-auto text-center border-2 border-white/40 text-white px-8 py-3 rounded-full font-semibold hover:bg-white/10 transition-colors"
             >
               Our Branches
             </Link>
@@ -245,38 +222,18 @@ export default function Home() {
             Fill out our online application form and our team will review your
             submission within 3–5 business days.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex justify-center">
             <Link
               href="/admissions/apply"
               className="bg-white text-teal-700 px-8 py-3 rounded-full font-semibold hover:bg-teal-50 transition-colors"
             >
               Start Application
             </Link>
-            <Link
-              href="/admissions/review"
-              className="border-2 border-white/40 text-white px-8 py-3 rounded-full font-semibold hover:bg-white/10 transition-colors"
-            >
-              Admin Review
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-zinc-200 text-zinc-500 py-12">
-        <div className="max-w-6xl mx-auto px-6 text-center text-sm">
-          <p className="mb-2">
-            <span className="text-zinc-800 font-semibold">DailyKids Preschool</span> —
-            Nurturing Young Minds Since 2020
-          </p>
-          <p>
-            Ambalangoda · Hikkaduwa | 📞 +94 91 225 6789 | ✉️ info@dailykids.com
-          </p>
-          <p className="mt-4 text-zinc-400">
-            &copy; {new Date().getFullYear()} DailyKids. All rights reserved.
-          </p>
-        </div>
-      </footer>
+
     </div>
   );
 }

@@ -78,29 +78,6 @@ export default function ReviewPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-zinc-200">
-        <nav className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/DailyKids.png" alt="DailyKids" width={40} height={40} className="h-10 w-auto" />
-            <span className="text-xl font-bold text-teal-700">DailyKids</span>
-          </Link>
-          <div className="flex items-center gap-6 text-sm font-medium">
-            <Link href="/" className="text-zinc-600 hover:text-teal-700 transition-colors">
-              Home
-            </Link>
-            <Link href="/admin" className="text-zinc-600 hover:text-teal-700 transition-colors">
-              Admin
-            </Link>
-            <Link
-              href="/admissions/review"
-              className="text-teal-700 border-b-2 border-teal-600 pb-1"
-            >
-              Review
-            </Link>
-          </div>
-        </nav>
-      </header>
-
       <main className="flex-1 max-w-4xl mx-auto px-6 py-16 w-full">
         <h1 className="text-4xl font-bold text-zinc-800 mb-2">Admission Review</h1>
         <p className="text-zinc-500 mb-8">
@@ -208,24 +185,24 @@ export default function ReviewPage() {
                       }
                       className="w-full border border-zinc-300 rounded-lg px-3 py-2 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-teal-500"
                     />
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <button
                         onClick={() => handleStatusChange(app.id, "approved")}
-                        className="flex-1 bg-green-600 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors"
+                        className="w-full sm:flex-1 bg-green-600 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors text-center"
                       >
                         ✅ Approve
                       </button>
                       {app.status === "pending" && (
                         <button
                           onClick={() => handleStatusChange(app.id, "underReview")}
-                          className="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors"
+                          className="w-full sm:flex-1 bg-indigo-600 text-white py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors text-center"
                         >
                           🔍 Review
                         </button>
                       )}
                       <button
                         onClick={() => handleStatusChange(app.id, "rejected")}
-                        className="flex-1 bg-red-500 text-white py-2 rounded-lg text-sm font-semibold hover:bg-red-600 transition-colors"
+                        className="w-full sm:flex-1 bg-red-500 text-white py-2 rounded-lg text-sm font-semibold hover:bg-red-600 transition-colors text-center"
                       >
                         ❌ Reject
                       </button>
@@ -237,15 +214,6 @@ export default function ReviewPage() {
           </div>
         )}
       </main>
-
-      <footer className="bg-white border-t border-zinc-200 text-zinc-500 py-12">
-        <div className="max-w-6xl mx-auto px-6 text-center text-sm">
-          <p>
-            <span className="text-zinc-800 font-semibold">DailyKids Preschool</span>{" "}
-            &copy; {new Date().getFullYear()}
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

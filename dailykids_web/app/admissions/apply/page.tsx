@@ -83,29 +83,6 @@ export default function ApplyPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-zinc-200">
-        <nav className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/DailyKids.png" alt="DailyKids" width={40} height={40} className="h-10 w-auto" />
-            <span className="text-xl font-bold text-teal-700">DailyKids</span>
-          </Link>
-          <div className="flex items-center gap-6 text-sm font-medium">
-            <Link href="/" className="text-zinc-600 hover:text-teal-700 transition-colors">
-              Home
-            </Link>
-            <Link href="/branches" className="text-zinc-600 hover:text-teal-700 transition-colors">
-              Branches
-            </Link>
-            <Link
-              href="/admissions/apply"
-              className="bg-teal-600 text-white px-5 py-2 rounded-full hover:bg-teal-700 transition-colors"
-            >
-              Apply Now
-            </Link>
-          </div>
-        </nav>
-      </header>
-
       <main className="flex-1 max-w-2xl mx-auto px-6 py-16 w-full">
         <h1 className="text-4xl font-bold text-zinc-800 mb-2">Admissions Application</h1>
         <p className="text-zinc-500 mb-10">
@@ -287,15 +264,6 @@ export default function ApplyPage() {
           </button>
         </form>
       </main>
-
-      <footer className="bg-white border-t border-zinc-200 text-zinc-500 py-12">
-        <div className="max-w-6xl mx-auto px-6 text-center text-sm">
-          <p>
-            <span className="text-zinc-800 font-semibold">DailyKids Preschool</span>{" "}
-            &copy; {new Date().getFullYear()}
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }
