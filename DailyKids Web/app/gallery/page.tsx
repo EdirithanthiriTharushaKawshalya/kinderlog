@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const galleryItems = [
   { caption: "Outdoor Playground — Ambalangoda", category: "facilities" },
@@ -23,7 +24,7 @@ export default function GalleryPage() {
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-zinc-200">
         <nav className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-3">
-            <img src="/DailyKids.png" alt="DailyKids" className="h-10 w-auto" />
+            <Image src="/DailyKids.png" alt="DailyKids" width={40} height={40} className="h-10 w-auto" />
             <span className="text-xl font-bold text-teal-700">DailyKids</span>
           </Link>
           <div className="flex items-center gap-6 text-sm font-medium">
